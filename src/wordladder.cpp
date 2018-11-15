@@ -25,13 +25,9 @@ int main() {
     string word2 = "";
 
     loadDictionary(dictionary);
-
     getWords(word1, word2);
-
-
-
     getLadder(word1, word2, dictionary);
- //   showResults();
+ // showResults();
 
 
     cout << "Have a nice day motherfucker." << endl;
@@ -55,11 +51,8 @@ void loadDictionary(Lexicon& dictionary){
 //**********************************this function gets the two words from the ladder************************************
 
 void getWords(string& wordA, string& wordB){
-
      wordA = getLine("Please enter the first word: ");
-
      wordB =  getLine("Please enter the second word: ");
-
 }
 
 
@@ -74,17 +67,14 @@ void getLadder(string& firstWord, string& secondWord, Lexicon& dictionary){
 //**************************************+this function prints all the values of the ladder through the stack***************
 
 void showResults(Stack<string>& stack){
-
     while(!stack.isEmpty()){              // while there are words inside the stack, pop them out
       cout << stack.pop();
     }
-
 }
 
-//**************+
+//**************+ brute force path generator*******************************************************************************
 
 void generate(string& firstWord, string& secondWord, Lexicon& dictionary){
-
     vector<char> alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}; // vector with the letters to generate words
     unsigned int alphabetSize = alphabet.size();
 
@@ -97,7 +87,7 @@ void generate(string& firstWord, string& secondWord, Lexicon& dictionary){
                              string wordOne =  partOne + partTwo + partThree;
 
                                 if(dictionary.contains(wordOne) && wordOne != firstWord)                                             //if the generated word is valid and is different from the original word
-                                              {                                                                                      //add it to the stack
+                                             {                                                                                      //add it to the stack
                                                     cout << " word found!: " << wordOne << endl;
                                                                                                     }
         }
