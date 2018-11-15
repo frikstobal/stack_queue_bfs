@@ -1,12 +1,12 @@
 #include <cctype>
-#include <cmath>,
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include "console.h"
-#include "queue.h";
-#include "stack.h";
+#include "queue.h"
+#include "stack.h"
 #include "lexicon.h"
 #include "simpio.h"
 #include "strlib.h"
@@ -19,7 +19,7 @@ void generate(string& firstWord, string& secondWord, Lexicon& dictionary);
 void getLadder(string& firstWord, string& secondWord, Lexicon& dictionary);
 
 int main() {
-    Queue<Stack<string >> stackQueue;
+    Queue<Stack<string>> stackQueue;
     Lexicon dictionary;
     string word1 = "";
     string word2 = "";
@@ -28,7 +28,6 @@ int main() {
     getWords(word1, word2);
     getLadder(word1, word2, dictionary);
  // showResults();
-
 
     cout << "Have a nice day motherfucker." << endl;
     return 0;
@@ -51,12 +50,16 @@ void loadDictionary(Lexicon& dictionary){
 //**********************************this function gets the two words from the ladder************************************
 
 void getWords(string& wordA, string& wordB){
+
      wordA = getLine("Please enter the first word: ");
-     wordB =  getLine("Please enter the second word: ");
+     wordA = toLowerCase(wordA);
+
+     wordB = getLine("Please enter the second word: ");
+     wordB = toLowerCase(wordB);
 }
 
 
-
+//*********************************ladder generator**********************************************************************
 
 void getLadder(string& firstWord, string& secondWord, Lexicon& dictionary){
     generate(firstWord, secondWord, dictionary);
@@ -72,14 +75,13 @@ void showResults(Stack<string>& stack){
     }
 }
 
-//**************+ brute force path generator*******************************************************************************
+//**************+********************* brute force path generator*******************************************************************************
 
 void generate(string& firstWord, string& secondWord, Lexicon& dictionary){
     vector<char> alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}; // vector with the letters to generate words
     unsigned int alphabetSize = alphabet.size();
 
     for(unsigned int index = 0; index < firstWord.length(); index++){
-
         for(unsigned int letter = 0; letter < alphabetSize; letter++){
                              string partOne = firstWord.substr(0, index);
                              char partTwo = alphabet.at(letter);
