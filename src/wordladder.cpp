@@ -17,9 +17,10 @@ void loadDictionary(Lexicon& dictionary);
 void getWords(string& wordA, string& wordB);
 void generate(string& firstWord, string& secondWord, Lexicon& dictionary);
 void getLadder(string& firstWord, string& secondWord, Lexicon& dictionary);
+bool isNeighbour(string lastWord, string newWord);
 
 int main() {
-    Queue<Stack<string>> stackQueue;
+
     Lexicon dictionary;
     string word1 = "";
     string word2 = "";
@@ -78,21 +79,70 @@ void showResults(Stack<string>& stack){
 //**************+********************* brute force path generator*******************************************************************************
 
 void generate(string& firstWord, string& secondWord, Lexicon& dictionary){
-    vector<char> alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}; // vector with the letters to generate words
-    unsigned int alphabetSize = alphabet.size();
+ Queue<Stack<string>> stackQueue;
+ Stack<string> stack;
+ stack.push(firstWord);
 
-    for(unsigned int index = 0; index < firstWord.length(); index++){
-        for(unsigned int letter = 0; letter < alphabetSize; letter++){
-                             string partOne = firstWord.substr(0, index);
-                             char partTwo = alphabet.at(letter);
-                             string partThree = firstWord.substr(index + 1);
-                             string wordOne =  partOne + partTwo + partThree;
+ stackQueue.enqueue(stack);
+ string currentWord = "";
+Lexicon wordCollection;
 
-                                if(dictionary.contains(wordOne) && wordOne != firstWord)                                             //if the generated word is valid and is different from the original word
-                                             {                                                                                      //add it to the stack
-                                                    cout << " word found!: " << wordOne << endl;
+while(!stackQueue.isEmpty()){
+    Stack<string> stackWord = stackQueue.dequeue();
+    string temporaryWord = stackWord.peek();
+
+
+    if(temporaryWord == secondWord){cout << stackWord;}
+
+
+     for(unsigned int index = 0; index < firstWord.length(); index++){
+            for(char letter = 'a'; letter < 'z'; letter++){
+
+
+                             string partOne = temporaryWord.substr(0, index);
+                             char partTwo = letter;
+                             string partThree = temporaryWord.substr(index + 1);
+                             string theWord =  partOne + partTwo + partThree;
+                            // cout << " debug " << theWord << "  " << temporaryWord << endl;
+
+
+
+
+
+                                if(dictionary.contains(theWord) && isNeighbour(temporaryWord, theWord) && !wordCollection.contains(theWord))                                             //if the generated word is valid and is different from the original word
+                                             {wordCollection.add(theWord);
+
+                                             Stack<string> newStackWord = stackWord;
+                                            newStackWord.push(theWord);//add it to the stack
+                                            stackQueue.enqueue(newStackWord);
+                                             // cout << stackWord << " stack lenght: " << stackWord.size();
+                                           //   cout <<  " stackQueue size: " <<  stackQueue.size() << stackQueue << endl;
+
+
+
                                                                                                     }
+
         }
     }
+}
 
+
+}
+
+
+bool isNeighbour(string lastWord, string newWord){
+   unsigned int letterCount = 0;
+   for(unsigned int i = 0; i < lastWord.length(); i++){
+        char lastWordLetter = lastWord[i];
+        char newWordLetter = newWord[i];
+
+             if(lastWordLetter == newWordLetter){++letterCount;}
+   }
+//cout << "letterCount" << letterCount << endl;
+    if(letterCount == lastWord.length() - 1 && lastWord != newWord){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
