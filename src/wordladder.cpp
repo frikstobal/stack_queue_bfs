@@ -25,10 +25,10 @@ int main() {
     string word1 = "";
     string word2 = "";
 
-    loadDictionary(dictionary);
+    loadDictionary(dictionary);                                            //need to add validation of file, words and create a cycle
     getWords(word1, word2);
     getLadder(word1, word2, dictionary);
- // showResults();
+ // showResults();                                                         //add function to show the shortest path in the opposite way
 
     cout << "Have a nice day motherfucker." << endl;
     return 0;
@@ -79,44 +79,35 @@ void showResults(Stack<string>& stack){
 //**************+********************* brute force path generator*******************************************************************************
 
 void generate(string& firstWord, string& secondWord, Lexicon& dictionary){
- Queue<Stack<string>> stackQueue;
- Stack<string> stack;
- stack.push(firstWord);
+ Queue<Stack<string>> stackQueue;               //we create the queue of stacks to store all posible paths
+ Stack<string> stack;                           //string stack to store the words
+ stack.push(firstWord);                         //we load the first word by the user in the stack
 
- stackQueue.enqueue(stack);
- string currentWord = "";
-Lexicon wordCollection;
+    stackQueue.enqueue(stack);                  //we put the stack in the queue to be processed
+  //  string currentWord = "";
+    Lexicon wordCollection;                     //lexicon to store all proccesed words in a set
 
-while(!stackQueue.isEmpty()){
-    Stack<string> stackWord = stackQueue.dequeue();
-    string temporaryWord = stackWord.peek();
+    while(!stackQueue.isEmpty()){               //while the queue has something to process
+      Stack<string> stackWord = stackQueue.dequeue();    //we take it out of the queue
+       string temporaryWord = stackWord.peek();          //take a peek to not to modify the contents
 
+        if(temporaryWord == secondWord){cout << stackWord;}  //if the last word in the stack is the second word -> we have found the path
 
-    if(temporaryWord == secondWord){cout << stackWord;}
+             for(unsigned int index = 0; index < firstWord.length(); index++){          //here we generate all possible words with a serial generator
+                for(char letter = 'a'; letter < 'z'; letter++){                         //we vary according the index and explore every possibility with the alphabet
 
+                             string partOne = temporaryWord.substr(0, index);           //we pick the firest unmodified part of the string
+                             char partTwo = letter;                                     //the variable char
+                             string partThree = temporaryWord.substr(index + 1);        //the last unmodified part
+                             string theWord =  partOne + partTwo + partThree;           //full word
 
-     for(unsigned int index = 0; index < firstWord.length(); index++){
-            for(char letter = 'a'; letter < 'z'; letter++){
-
-
-                             string partOne = temporaryWord.substr(0, index);
-                             char partTwo = letter;
-                             string partThree = temporaryWord.substr(index + 1);
-                             string theWord =  partOne + partTwo + partThree;
-                            // cout << " debug " << theWord << "  " << temporaryWord << endl;
-
-
-
-
-
-                                if(dictionary.contains(theWord) && isNeighbour(temporaryWord, theWord) && !wordCollection.contains(theWord))                                             //if the generated word is valid and is different from the original word
+                                if(dictionary.contains(theWord) && isNeighbour(temporaryWord, theWord) && !wordCollection.contains(theWord))  //if it's a valid word, neighbour of the last word on the stack, and it's not been processed yet, we addit to the current stack                                           //if the generated word is valid and is different from the original word
                                              {wordCollection.add(theWord);
-
-                                             Stack<string> newStackWord = stackWord;
-                                            newStackWord.push(theWord);//add it to the stack
+                                             Stack<string> newStackWord = stackWord;    //we create a new stack, and just add it to the queue as a new path to be processed
+                                            newStackWord.push(theWord);                 //add it to the stack
                                             stackQueue.enqueue(newStackWord);
-                                             // cout << stackWord << " stack lenght: " << stackWord.size();
-                                           //   cout <<  " stackQueue size: " <<  stackQueue.size() << stackQueue << endl;
+                                            // cout << stackWord << " stack lenght: " << stackWord.size(); ***************debug***************
+                                            //   cout <<  " stackQueue size: " <<  stackQueue.size() << stackQueue << endl;
 
 
 
@@ -126,23 +117,22 @@ while(!stackQueue.isEmpty()){
     }
 }
 
-
 }
 
-
+//****************************************determines if a word is a neighbour or not, if it has just one different letter it classifies**********++
 bool isNeighbour(string lastWord, string newWord){
-   unsigned int letterCount = 0;
+   unsigned int letterCount = 0;                                           //event counter
    for(unsigned int i = 0; i < lastWord.length(); i++){
         char lastWordLetter = lastWord[i];
         char newWordLetter = newWord[i];
 
-             if(lastWordLetter == newWordLetter){++letterCount;}
+             if(lastWordLetter == newWordLetter){++letterCount;}           //if every character is the same in the same location, we add ++
    }
-//cout << "letterCount" << letterCount << endl;
-    if(letterCount == lastWord.length() - 1 && lastWord != newWord){
-        return true;
+
+        if(letterCount == lastWord.length() - 1 && lastWord != newWord){   //if it's number of events is exactly the index minus one it classifies, else it´s the same word
+             return true;
     }
-    else{
-        return false;
+                else{
+                    return false;                                          //else it´s not neighbour
     }
 }
